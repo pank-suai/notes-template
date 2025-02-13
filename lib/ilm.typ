@@ -16,73 +16,46 @@
 #let ilm(
   // The title for your work.
   title: [Your Title],
-
   // Author's name.
   author: "Author",
-
+  // Author formatting
+  author-format: author => [#text(1.6em, author)],
   // The paper size to use.
   paper-size: "a4",
-
   // Date that will be displayed on cover page.
   // The value needs to be of the 'datetime' type.
   // More info: https://typst.app/docs/reference/foundations/datetime/
   // Example: datetime(year: 2024, month: 03, day: 17)
   date: none,
-
   // Format in which the date will be displayed on cover page.
   // More info: https://typst.app/docs/reference/foundations/datetime/#format
   // The default format will display date as: MMMM DD, YYYY
   date-format: "[month repr:long] [day padding:zero], [year repr:full]",
-
   // An abstract for your work. Can be omitted if you don't have one.
   abstract: none,
-
   // The contents for the preface page. This will be displayed after the cover page. Can
   // be omitted if you don't have one.
   preface: none,
-
   // The result of a call to the `outline` function or `none`.
   // Set this to `none`, if you want to disable the table of contents.
   // More info: https://typst.app/docs/reference/model/outline/
   table-of-contents: outline(),
-
   // Display an appendix after the body but before the bibliography.
-  appendix: (
-    enabled: false,
-    title: "",
-    heading-numbering-format: "",
-    body: none,
-  ),
-
+  appendix: (enabled: false, title: "", heading-numbering-format: "", body: none),
   // The result of a call to the `bibliography` function or `none`.
   // Example: bibliography("refs.bib")
   // More info: https://typst.app/docs/reference/model/bibliography/
   bibliography: none,
-
   // Whether to start a chapter on a new page.
   chapter-pagebreak: true,
-
   // Whether to display a maroon circle next to external links.
   external-link-circle: true,
-
   // Display an index of figures (images).
-  figure-index: (
-    enabled: false,
-    title: "",
-  ),
-
+  figure-index: (enabled: false, title: ""),
   // Display an index of tables
-  table-index: (
-    enabled: false,
-    title: "",
-  ),
-
+  table-index: (enabled: false, title: ""),
   // Display an index of listings (code blocks).
-  listing-index: (
-    enabled: false,
-    title: "",
-  ),
-
+  listing-index: (enabled: false, title: ""),
   // The content of your work.
   body,
 ) = {
@@ -97,25 +70,31 @@
   show raw: set text(font: ("Iosevka", "Fira Mono"), size: 9pt)
 
   // Configure page size and margins.
-  set page(
-    paper: paper-size,
-    margin: (bottom: 1.75cm, top: 2.25cm),
-  )
+  set page(paper: paper-size, margin: (bottom: 1.75cm, top: 2.25cm))
 
   // Cover page.
   page(
     align(
       left + horizon,
-      block(width: 90%)[
+      block(
+        width: 90%,
+      )[
         #let v-space = v(2em, weak: true)
         #text(3em)[*#title*]
-
         #v-space
-        #text(1.6em, author)
+
+        #if type(author) == str {
+          author = (author,)
+        }
+        #for author in author {
+          author-format(author)
+        }
 
         #if abstract != none {
           v-space
-          block(width: 80%)[
+          block(
+            width: 80%,
+          )[
             // Default leading is 0.65em.
             #par(leading: 0.78em, justify: true, linebreaks: "optimized", abstract)
           ]
@@ -132,7 +111,12 @@
   // Configure paragraph properties.
   // Default leading is 0.65em.
   // Default spacing is 1.2em.
-  set par(leading: 0.7em, spacing: 1.35em, justify: true, linebreaks: "optimized")
+  set par(
+    leading: 0.7em,
+    spacing: 1.35em,
+    justify: true,
+    linebreaks: "optimized",
+  )
 
   // Add vertical space after headings.
   show heading: it => {
@@ -150,7 +134,9 @@
       sym.wj
       h(1.6pt)
       sym.wj
-      super(box(height: 3.8pt, circle(radius: 1.2pt, stroke: 0.7pt + rgb("#993333"))))
+      super(
+        box(height: 3.8pt, circle(radius: 1.2pt, stroke: 0.7pt + rgb("#993333"))),
+      )
     }
   }
 
@@ -221,7 +207,7 @@
   set table(
     // Increase the table cell's padding
     inset: 7pt, // default is 5pt
-    stroke: (0.5pt + stroke-color)
+    stroke: (0.5pt + stroke-color),
   )
   // Use smallcaps for table header row.
   show table.cell.where(y: 0): smallcaps
@@ -253,7 +239,7 @@
     counter(heading).update(0)
     set heading(outlined: false, numbering: (..nums) => {
       let vals = nums.pos()
-      if vals.len() > 0{
+      if vals.len() > 0 {
         let v = vals.slice(0)
         return numbering(num-fmt, ..v)
       }
