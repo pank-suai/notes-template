@@ -16,7 +16,6 @@
   date: datetime.today(),
   abstract: [Кто введёт? Насколько краткий конспект? на чём основан?],
   table-of-contents: outline(depth: 2),
-  preface: [  ],
   external-link-circle: false
 )
 
