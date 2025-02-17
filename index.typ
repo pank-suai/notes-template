@@ -12,7 +12,13 @@
   title: [Название],
   author: 
     "Панков Василий <pank-su>",
-  author-format: (author) => [#block(image("src/images/000_avatar.png", width: 50pt, height: 50pt), radius: 50%, clip: true) #author],
+  author-format: (author) => [
+    #stack(dir: ltr)[#block(
+        image("src/images/000_avatar.png", width: 3em, height: 3em),
+        radius: 50%,
+        clip: true,
+      )][#h(1em)][#text(author, size: 1.6em)]
+  ],
   date: datetime.today(),
   abstract: [Кто введёт? Насколько краткий конспект? на чём основан?],
   table-of-contents: outline(depth: 2),
